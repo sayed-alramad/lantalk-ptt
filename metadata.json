@@ -1,0 +1,6 @@
+{
+  "name": "LAN Talkie",
+  "description": "Peer-to-peer Push-to-Talk voice intercom over local Wi-Fi or hotspot with zero internet required.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

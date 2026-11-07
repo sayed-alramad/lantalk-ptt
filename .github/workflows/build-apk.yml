@@ -1,0 +1,48 @@
+name: Build LAN Talkie APK
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          # Must match gradle/wrapper/gradle-wrapper.properties (Android Gradle Plugin 9.x needs Gradle 9.x)
+          gradle-version: '9.3.1'
+
+      - name: Create debug keystore
+        # app/build.gradle.kts signs the debug build with ${rootDir}/debug.keystore, which is not in the repo
+        run: |
+          keytool -genkeypair -keystore debug.keystore -storepass android \
+            -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 \
+            -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+
+      - name: Build Debug APK with Gradle
+        run: gradle assembleDebug --stacktrace
+
+      - name: Upload Debug APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: file_apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
