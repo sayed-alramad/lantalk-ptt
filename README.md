@@ -1,22 +1,23 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# LAN Talkie (lantalk-ptt)
 
-# Run and deploy your AI Studio app
+Offline push-to-talk walkie-talkie for Android over Wi-Fi / phone hotspot. No internet, no server.
 
-This contains everything you need to run your app locally.
+- Live voice: UDP, 16 kHz mono PCM, 20 ms frames, jitter buffer.
+- Coming: text messages, files and voice notes over TCP — see the [roadmap](docs/ROADMAP.md).
 
-View your app in AI Studio: https://ai.studio/apps/29bf6a6a-f320-428e-8c53-c2400d0bba91
+## Download
+Latest APK: [Releases](../../releases/latest). Every push also produces an APK artifact (`file_apk`) in the
+[Actions](../../actions) tab.
 
-## Run Locally
+## Use
+1. Put both phones on the same Wi-Fi or one phone's hotspot (no captive portal / client isolation).
+2. Install the APK, allow microphone and notifications.
+3. Enter the other phone's IP (shown on its screen), port 8888, tap Start.
+4. Hold the button to talk.
 
-**Prerequisites:**  [Android Studio](https://developer.android.com/studio)
+## Docs
+[Roadmap](docs/ROADMAP.md) · [Architecture](docs/ARCHITECTURE.md) · [Testing](docs/TESTING.md) ·
+[Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md)
 
-
-1. Open Android Studio
-2. Select **Open** and choose the directory containing this project
-3. Allow Android Studio to fix any incompatibilities as it imports the project.
-4. Create a file named `.env` in the project directory and set `GEMINI_API_KEY` in that file to your Gemini API key (see `.env.example` for an example)
-5. Remove this line from the app's `build.gradle.kts` file: `signingConfig = signingConfigs.getByName("debugConfig")`
-6. Run the app on an emulator or physical device
-7. If you have already published your app in AI Studio, please [request upload key reset](https://support.google.com/googleplay/android-developer/answer/9842756#zippy=%2Crequest-an-upload-key-reset) in Google Play Console.
+## Build
+`gradle assembleDebug` (JDK 17, Gradle 9.3.1, Android SDK 36). CI does this automatically.
