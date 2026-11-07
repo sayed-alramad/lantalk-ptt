@@ -87,6 +87,11 @@ class UdpVoiceSocket(
     fun start(scope: CoroutineScope): Boolean {
         if (isRunning) return true
 
+        // IMPORTANT: read the port here. Inside DatagramSocket(null).apply { ... } the name
+        // "localPort" resolves to DatagramSocket.getLocalPort(), which is 0 for an unbound socket,
+        // so the socket was silently bound to a random port instead of the configured one (8888).
+        val portToBind = this.localPort
+
         return try {
             val sock = DatagramSocket(null).apply {
                 reuseAddress = true
@@ -97,7 +102,7 @@ class UdpVoiceSocket(
                         Log.w(TAG, "Could not bind socket to Wi-Fi network: ${e.message}")
                     }
                 }
-                bind(InetSocketAddress(localPort))
+                bind(InetSocketAddress(portToBind))
                 // Set receive buffer for UDP audio
                 receiveBufferSize = AudioPacketConstants.PACKET_SIZE * 32
                 sendBufferSize = AudioPacketConstants.PACKET_SIZE * 32
